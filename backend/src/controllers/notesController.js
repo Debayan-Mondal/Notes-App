@@ -59,4 +59,5 @@ async function getNoteById(req,res) {
     }
 }
 
-module.exports = {getAllNotes, createNote, updateNote, deleteNote, getNoteById};
+const router = {getAllNotes, createNote, updateNote, deleteNote, getNoteById};
+module.exports = router

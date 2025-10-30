@@ -1,23 +1,35 @@
-const express = require('express');
-const router = require('./routes/nodeRoutes');
-const  connectDB  = require('./config/db.js');
-const rateLimiter = require('./middleware/rateLimiter.js')
+import express from 'express';
+import router from './routes/nodeRoutes.js'
+import connectDB from './config/db.js'
+import rateLimiter from './middleware/rateLimiter.js';
+import path from "path";
+import cors from 'cors';
+import { configDotenv } from 'dotenv';
+
+configDotenv();
 const app = express();
 const PORT = process.env.PORT || 3000;
-const cors = require('cors');
+const __dirname = path.resolve();
 
-require('dotenv').config();
 
-app.use(cors({
+
+
+
+if(process.env.NODE_ENV !== "production") {
+    app.use(cors({
     origin: 'http://localhost:5173',
 }));
-
-app.use(express.json());
-
+}
 
 app.use('/api/notes',router);
-app.use(rateLimiter);
 
+if(process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname,"../frontend/dist")))
+
+app.get("*",(req, res) => {
+    res.sendFile(path.join(__dirname,"../frontend","dist",))
+})
+}
 
 
 
