@@ -4,15 +4,19 @@ const  connectDB  = require('./config/db.js');
 const rateLimiter = require('./middleware/rateLimiter.js')
 const app = express();
 const PORT = process.env.PORT || 3000;
+const cors = require('cors');
 
 require('dotenv').config();
 
+app.use(cors({
+    origin: 'http://localhost:5173',
+}));
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(rateLimiter);
+
 
 app.use('/api/notes',router);
+app.use(rateLimiter);
 
 
 
